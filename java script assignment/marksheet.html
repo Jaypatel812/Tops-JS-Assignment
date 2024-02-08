@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marksheet</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .error {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-120%);
+        color: #a94442;
+        background-color: #f2dede;
+        padding: 8px 10px;
+        width: 100%;
+        border-radius: 10px;
+      }
+
+      .marksheet-wrapper {
+        position: relative;
+        border: 2px solid rgba(0, 0, 0, 0.15);
+        padding: 25px;
+        border-radius: 10px;
+      }
+
+      ul {
+        margin-top: 20px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      ul li {
+        display: flex;
+      }
+
+      ul li > * {
+        flex: 1;
+      }
+
+      li input {
+        padding: 3px 7px;
+        font-size: 16px;
+      }
+
+      .result-button-wrapper {
+        display: flex;
+        margin-top: 10px;
+      }
+
+      .result-button-wrapper > * {
+        flex: 1;
+      }
+
+      .result-wrapper > button {
+        padding: 5px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #131313;
+        cursor: pointer;
+        margin-left: -8px;
+      }
+
+      .result-detail {
+        display: flex;
+        margin-top: 10px;
+        font-size: 17px;
+      }
+
+      #total,
+      #percentage {
+        color: blue;
+      }
+
+      .result-detail > * {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="marksheet-wrapper">
+      <div class="error show">This is some error</div>
+      <h4>Enter Marks</h4>
+      <ul>
+        <li>
+          <label for="c_language">1. C Language</label>
+          <input type="text" maxlength="3" data-subj="C Language" />
+        </li>
+        <li>
+          <label for="c++_language">2. C++ Language</label>
+          <input type="text" maxlength="3" data-subj="C++ Language" />
+        </li>
+        <li>
+          <label for="database">3. Database</label>
+          <input type="text" maxlength="3" data-subj="Database" />
+        </li>
+        <li>
+          <label for="html">4. HTML</label>
+          <input type="text" maxlength="3" data-subj="HTML" />
+        </li>
+        <li>
+          <label for="css">5. CSS</label>
+          <input type="text" maxlength="3" data-subj="CSS" />
+        </li>
+        <li>
+          <label for="php">6. PHP</label>
+          <input type="text" maxlength="3" data-subj="PHP" />
+        </li>
+        <li>
+          <label for="core_java">7. Core Java</label>
+          <input type="text" maxlength="3" data-subj="Core Java" />
+        </li>
+      </ul>
+      <div class="result-button-wrapper">
+        <div></div>
+        <div class="result-wrapper">
+          <button id="result-btn">Result</button>
+        </div>
+      </div>
+      <div class="result-detail">
+        <div>
+          <span>Total is : <span id="total">000</span> / 700</span>
+        </div>
+        <div>
+          <span>Percentage is : <span id="percentage">00</span> % </span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const resultInputs = document.querySelectorAll("ul li input");
+
+      const resultButton = document.querySelector("#result-btn");
+
+      resultInputs.forEach((input) => {
+        input.addEventListener("input", (e) => {
+          e.target.value = e.target.value.replace(/[^0-9]/g, "");
+        });
+      });
+
+      function checkInsertedMarks() {
+        let valid = true;
+        let subjName = null;
+        let emptyValue = false;
+
+        for (let i = 0; i < resultInputs.length; i++) {
+          const input = resultInputs[i];
+
+          if (input.value === "") {
+            valid = false;
+            subjName = input.getAttribute("data-subj");
+            emptyValue = true;
+            break;
+          } else if (input.value > 100) {
+            valid = false;
+            subjName = input.getAttribute("data-subj");
+            console.log(subjName);
+            break;
+          }
+        }
+
+        return [valid, subjName, emptyValue];
+      }
+
+      resultButton.addEventListener("click", () => {
+        let [validation, subjName, emptyValue] = checkInsertedMarks();
+        if (!validation) {
+          let errorContainer = document.querySelector(".error");
+          if (emptyValue) {
+            errorContainer.innerText = "Enter marks for " + subjName;
+          } else {
+            errorContainer.innerText =
+              "Marks for " + subjName + " must be less than 100!";
+          }
+          document.querySelector(".error").style.display = "block";
+          document.querySelector(`[data-subj="${subjName}"]`).focus();
+          setTimeout(() => {
+            document.querySelector(".error").style.display = "none";
+          }, 3000);
+          return;
+        }
+        document.querySelector("#total").innerText = calculateResult();
+        document.querySelector("#percentage").innerText =
+          calculatePercentage().toFixed(2);
+      });
+
+      function calculateResult() {
+        let result = 0;
+        resultInputs.forEach((input) => {
+          result += Number(input.value);
+        });
+        return result;
+      }
+
+      function calculatePercentage() {
+        const totalMarks = document.querySelector("#total").innerText;
+        return (totalMarks * 100) / 700;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      padding: 10px;
+    }
+    button {
+      padding: 10px 15px;
+    }
+  </style>
+
+  <body>
+    VALUE 01 <input type="number" id="one">
+    <br><br>
+    VALUE 02 <input type="number" id="two"> <br><br>
+    <pre>TOTAL    <input type="text" id="tot" value="" disabled></pre>
+
+    <br><br>
+    <button onclick="add()">+</button>
+    <button onclick="mul()">*</button>
+    <button onclick="div()">/</button>
+    <button onclick="sub()">-</button>
+
+    <script>
+      let one = document.getElementById("one");
+      let two = document.getElementById("two");
+      function add() {
+        let tot = Number(one.value) + Number(two.value);
+        document.getElementById("tot").value = tot;
+      }
+
+      function sub() {
+        let tot = Number(one.value) - Number(two.value);
+        document.getElementById("tot").value = tot;
+      }
+
+      function mul() {
+        let tot = Number(one.value) * Number(two.value);
+        document.getElementById("tot").value = tot;
+      }
+
+      function div() {
+        let tot = Number(one.value) / Number(two.value);
+        document.getElementById("tot").value = tot;
+      }
+    </script>
+  </body>
+</html>
